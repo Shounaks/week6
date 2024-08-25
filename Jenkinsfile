@@ -55,7 +55,7 @@ pipeline {
                 attachLog: true,
                 to: 'shounakbhalerao777@gmail.com'
         }
-        success {
+        failure {
             emailext body: '[FAILURE] Jenkins Week 6 Activity : Build Success',
                 subject: '🔴 Jenkins Build | Test Subject',
                 attachLog: true,
