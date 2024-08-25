@@ -44,8 +44,13 @@ pipeline {
 
         stage('Deploy to Production') {
             steps {
-                echo "Deployed code situated at ${env.DIRECTORY_PATH}, to the following environment: ${env.PRODUCTION_ENVIRONMENT}"
+                echo "PRODUCTION_STEP: Deployed code situated at ${env.DIRECTORY_PATH}, to the following environment: ${env.PRODUCTION_ENVIRONMENT}"
             }
+        }
+        post{
+            emailext body: 'Jenkins: Shounak Bhalerao | Test Success',
+                subject: 'Jenkins Build| Test Subject',
+                to: 'shounakbhalerao777@gmail.com'
         }
 
     }
