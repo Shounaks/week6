@@ -47,12 +47,13 @@ pipeline {
                 echo "PRODUCTION_STEP: Deployed code situated at ${env.DIRECTORY_PATH}, to the following environment: ${env.PRODUCTION_ENVIRONMENT}"
             }
         }
-        post{
+    }
+    post{
+        always {
             emailext body: 'Jenkins: Shounak Bhalerao | Test Success',
                 subject: 'Jenkins Build| Test Subject',
                 to: 'shounakbhalerao777@gmail.com'
         }
-
     }
 }
 
