@@ -52,11 +52,13 @@ pipeline {
         success {
             emailext body: '[SUCCESS] Jenkins Week 6 Activity : Build Success',
                 subject: '🟢 Jenkins Build | Test Subject',
+                attachLog: true,
                 to: 'shounakbhalerao777@gmail.com'
         }
         success {
             emailext body: '[FAILURE] Jenkins Week 6 Activity : Build Success',
                 subject: '🔴 Jenkins Build | Test Subject',
+                attachLog: true,
                 to: 'shounakbhalerao777@gmail.com'
         }
     }
