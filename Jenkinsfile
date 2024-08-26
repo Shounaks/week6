@@ -55,7 +55,7 @@ pipeline {
 
         stage('Approval') {
             steps {
-//                 echo 'Hello World'
+                echo 'Hello World'
                 sleep 10
             }
         }
