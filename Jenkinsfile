@@ -53,17 +53,17 @@ pipeline {
             }
         }
 
-        stage('Approval') {
-            steps {
-                echo 'Hello World'
-                sleep 10
-            }
-        }
+//         stage('Approval') {
+//             steps {
+//                 echo 'Hello World'
+//                 sleep 10
+//             }
+//         }
 
         stage('Deploy to Production') {
             steps {
                 echo "DEPLOY_STEP: Deploy the application to a testing environment specified by the environment variable ${env.TESTING_ENVIRONMENT}"
-                echo "DEPLOY_STEP: TOOLS_USED: AKS, Amazon Container Service"
+                echo "DEPLOY_STEP: TOOLS_USED: AKS, Amazon Elastic Container Service"
             }
         }
     }
