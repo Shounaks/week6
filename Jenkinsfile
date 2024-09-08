@@ -52,10 +52,10 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'TEST_STEP: Unit Tests'
-                script {
+                sh """
                     cd ${env.BASE_PATH}
                     mvn test
-                }
+                """.stripIndent().trim()
             }
             post{
                 always {
@@ -67,8 +67,10 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     script {
-                        cd ${env.BASE_PATH}
-                        mvn sonar:sonar -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.login=${env.SONAR_LOGIN}
+                        sh """
+                            cd ${env.BASE_PATH}
+                            mvn sonar:sonar -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.login=${env.SONAR_LOGIN}
+                        """.stripIndent().trim()
                     }
                 }
             }
