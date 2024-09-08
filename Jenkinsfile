@@ -80,7 +80,7 @@ pipeline {
                 script{
                     dir('hello-spring') {
                         def appImage = docker.build("${IMAGE_NAME}:${DOCKER_TAG}")
-                        echo "Docker image hello-spring:NoVersion has been built."
+                        echo "Docker image has been built!"
                         // Push the Docker image to DockerHub
                         docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS_ID) {
                             appImage.push("${DOCKER_TAG}") // Push the image with build number tag
@@ -94,13 +94,13 @@ pipeline {
 
         stage('Release') {
             steps {
-                echo "DEPLOY_STEP: do nothing"
+                echo "RELEASE_STEP: do nothing"
             }
         }
         stage('Cleanup') {
             steps {
                 script {
-                    sh "docker rmi ${registry} :noVersion"
+                    sh "docker rmi ${IMAGE_NAME}:${DOCKER_TAG}"
                 }
             }
         }
