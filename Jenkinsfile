@@ -21,6 +21,7 @@ pipeline {
     // REFERENCES USED
     // Reference: https://www.jenkins.io/doc/tutorials/build-a-java-app-with-maven/
     // https://www.geeksforgeeks.org/how-to-integrate-sonarqube-with-jenkins/
+    // https://hackernoon.com/how-to-make-docker-images-with-jenkins-pipelines-xsh3uza
 
         stage('Build') {
             steps {
