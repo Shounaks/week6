@@ -36,13 +36,11 @@ pipeline {
                 """.stripIndent().trim()
 
                 echo 'BUILD: DOCKER IMAGE'
-                sh """
+                script{
                     cd ${env.BASE_PATH}
-
-                """.stripIndent().trim()
-                def appImage = docker.build("hello-spring:NoVersion")
-                echo "Docker image hello-spring:NoVersion has been built."
-
+                    def appImage = docker.build("hello-spring:NoVersion")
+                    echo "Docker image hello-spring:NoVersion has been built."
+                }
             }
         }
 
