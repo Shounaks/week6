@@ -63,6 +63,7 @@ pipeline {
                 }
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
@@ -75,15 +76,18 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy') {
             steps {
                 echo "DEPLOY_STEP: Push Image To DockerHub"
                 script {
                     docker.withRegistry( '', registryCredential ) {
-                    dockerImage.push()
+                        dockerImage.push()
+                    }
                 }
             }
         }
+
         stage('Release') {
             steps {
                 echo "DEPLOY_STEP: do nothing"
