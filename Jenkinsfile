@@ -40,7 +40,7 @@ pipeline {
             // Reference: https://www.jenkins.io/doc/tutorials/build-a-java-app-with-maven/
             post{
                 always {
-                    junit 'target/surefire-reports/*.xml'
+                    junit "${env.BASE_PATH}target/surefire-reports/*.xml"
                 }
             }
         }
