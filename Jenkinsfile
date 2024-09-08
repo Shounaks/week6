@@ -42,8 +42,10 @@ pipeline {
 
                 echo 'BUILD: DOCKER IMAGE'
                 script{
-                    cd ${env.BASE_PATH}
-                    dockerImage = docker.build registry + ":noVersion"
+                    sh """
+                        cd ${env.BASE_PATH}
+                        dockerImage = docker.build registry + ":noVersion"
+                    """.stripIndent().trim()
                     echo "Docker image hello-spring:NoVersion has been built."
                 }
             }
