@@ -7,6 +7,8 @@ pipeline {
         TARGET_PATH = 'target/'
         DIRECTORY_PATH = 'source/'
         TESTING_ENVIRONMENT = 'dev'
+        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_LOGIN = credentials('sonarqube-token') // Stored in Jenkins Credentials Manager
         PRODUCTION_ENVIRONMENT = 'shounak bhalerao'
         OWNER = 'shounak bhalerao'
     }
@@ -40,6 +42,15 @@ pipeline {
             post{
                 always {
                     junit "${env.BASE_PATH}target/surefire-reports/*.xml"
+                }
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    script {
+                        sh "mvn sonar:sonar -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.login=${env.SONAR_LOGIN}"
+                    }
                 }
             }
         }
