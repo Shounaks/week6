@@ -12,9 +12,11 @@ pipeline {
         PRODUCTION_ENVIRONMENT = 'shounak bhalerao'
         OWNER = 'shounak bhalerao'
 
-        registry = 'shalnark/hello-spring'
-        registryCredential = credentials('dockerhub-credentials') // Stored in Jenkins Credentials Manager
-        dockerImage = ''
+//         registry = 'shalnark/hello-spring'
+        DOCKER_REGISTRY  = credentials('dockerhub-credentials') // Stored in Jenkins Credentials Manager
+        IMAGE_NAME = 'myapp'
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
     }
 
     stages {
@@ -42,10 +44,7 @@ pipeline {
 
                 echo 'BUILD: DOCKER IMAGE'
                 script{
-                    sh """
-                        cd ${env.BASE_PATH}
-                        dockerImage = docker.build registry + ":noVersion"
-                    """.stripIndent().trim()
+                    def appImage = docker.build("${IMAGE_NAME}:${DOCKER_TAG}")
                     echo "Docker image hello-spring:NoVersion has been built."
                 }
             }
@@ -83,8 +82,10 @@ pipeline {
             steps {
                 echo "DEPLOY_STEP: Push Image To DockerHub"
                 script {
-                    docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push()
+                    // Push the Docker image to DockerHub
+                    docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS_ID) {
+                        appImage.push("${DOCKER_TAG}") // Push the image with build number tag
+                        appImage.push("latest") // Optionally push the image with 'latest' tag
                     }
                 }
             }
