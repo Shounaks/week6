@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         REPO_URL = 'https://github.com/Shounaks/hello-spring.git'
+        BASE_PATH = 'hello-spring/'
         TARGET_PATH = 'target/'
         DIRECTORY_PATH = 'source/'
         TESTING_ENVIRONMENT = 'dev'
@@ -15,12 +16,12 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'BUILD: Cleaning in progress'
-                sh "rm -rf hello-spring/"
+                sh "rm -rf ${env.BASE_PATH}"
                 echo 'BUILD: Cloning Repository to local and trying to create an executable'
                 sh "git clone ${env.REPO_URL}"
                 sh """
-                    cd hello-spring
-                    mvn clean package
+                    cd ${env.BASE_PATH}
+                    mvn -B -DskipTests clean package
                 """.stripIndent().trim()
             }
         }
@@ -28,9 +29,19 @@ pipeline {
         stage('Unit & Integration Test') {
             steps {
                 echo 'TEST_STEP: Unit Tests'
+                sh """
+                    cd ${env.BASE_PATH}
+                    mvn test
+                """.stripIndent().trim()
                 echo 'TEST_STEP: TOOLS_USED: MOCKITO'
                 echo 'TEST_STEP: Integration Tests'
                 echo 'TEST_STEP: TOOLS_USED: WIREMOCK'
+            }
+            // Reference: https://www.jenkins.io/doc/tutorials/build-a-java-app-with-maven/
+            post{
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
 
