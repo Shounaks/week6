@@ -22,6 +22,12 @@ pipeline {
             steps {
                 echo 'BUILD: Cleaning in progress'
                 sh "rm -rf ${env.BASE_PATH}"
+
+                echo 'BUILD: Verification'
+                sh "git --version"
+                sh "docker --version"
+                sh "mvn --version"
+
                 echo 'BUILD: Cloning Repository to local and trying to create an executable'
                 sh "git clone ${env.REPO_URL}"
                 sh """
