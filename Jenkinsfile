@@ -44,8 +44,10 @@ pipeline {
 
                 echo 'BUILD: DOCKER IMAGE'
                 script{
-                    def appImage = docker.build("${IMAGE_NAME}:${DOCKER_TAG}")
-                    echo "Docker image hello-spring:NoVersion has been built."
+                    dir('hello-spring') {
+                        def appImage = docker.build("${IMAGE_NAME}:${DOCKER_TAG}")
+                        echo "Docker image hello-spring:NoVersion has been built."
+                    }
                 }
             }
         }
