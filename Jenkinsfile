@@ -83,15 +83,15 @@ pipeline {
                 attachLog: true,
                 to: 'shounakbhalerao777@gmail.com'
         }
-        always{
-            script {
-                // This requires a SonarQube webhook setup which cant be done on
-                // the same server as jenkins so skipping this part as for now.
-                // It doesnt affect our functionality
-                // Optionally, display SonarQube quality gate status after analysis
-                // waitForQualityGate abortPipeline: true
-            }
-        }
+//         always{
+//             script {
+//                 // This requires a SonarQube webhook setup which cant be done on
+//                 // the same server as jenkins so skipping this part as for now.
+//                 // It doesnt affect our functionality
+//                 // Optionally, display SonarQube quality gate status after analysis
+//                 // waitForQualityGate abortPipeline: true
+//             }
+//         }
     }
 }
 
