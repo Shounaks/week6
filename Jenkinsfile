@@ -16,7 +16,7 @@ pipeline {
         DOCKER_REGISTRY  = credentials('dockerhub-credentials') // Stored in Jenkins Credentials Manager
         IMAGE_NAME = 'myapp'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
-        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
+//         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
     }
 
     stages {
