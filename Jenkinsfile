@@ -112,6 +112,5 @@ pipeline {
 //                 // waitForQualityGate abortPipeline: true
 //             }
 //         }
-//     }
+    }
 }
-
