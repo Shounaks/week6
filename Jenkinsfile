@@ -11,6 +11,10 @@ pipeline {
         SONAR_LOGIN = credentials('sonarqube-token') // Stored in Jenkins Credentials Manager
         PRODUCTION_ENVIRONMENT = 'shounak bhalerao'
         OWNER = 'shounak bhalerao'
+
+        registry = 'shalnark/hello-spring'
+        registryCredential = credentials('dockerhub-credentials') // Stored in Jenkins Credentials Manager
+        dockerImage = ''
     }
 
     stages {
@@ -38,7 +42,7 @@ pipeline {
                 echo 'BUILD: DOCKER IMAGE'
                 script{
                     cd ${env.BASE_PATH}
-                    def appImage = docker.build("hello-spring:NoVersion")
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
                     echo "Docker image hello-spring:NoVersion has been built."
                 }
             }
@@ -73,7 +77,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "DEPLOY_STEP: do nothing"
+                echo "DEPLOY_STEP: Push Image To DockerHub"
+                docker.withRegistry( '', registryCredential ) {
+                dockerImage.push()
             }
         }
 
@@ -83,19 +89,19 @@ pipeline {
             }
         }
     }
-    post{
-        success {
-            emailext body: '[SUCCESS] Jenkins Week 6 Activity : Build Success',
-                subject: '🟢 Jenkins Build | Test Subject',
-                attachLog: true,
-                to: 'shounakbhalerao777@gmail.com'
-        }
-        failure {
-            emailext body: '[FAILURE] Jenkins Week 6 Activity : Build Success',
-                subject: '🔴 Jenkins Build | Test Subject',
-                attachLog: true,
-                to: 'shounakbhalerao777@gmail.com'
-        }
+//     post{
+//         success {
+//             emailext body: '[SUCCESS] Jenkins Week 6 Activity : Build Success',
+//                 subject: '🟢 Jenkins Build | Test Subject',
+//                 attachLog: true,
+//                 to: 'shounakbhalerao777@gmail.com'
+//         }
+//         failure {
+//             emailext body: '[FAILURE] Jenkins Week 6 Activity : Build Success',
+//                 subject: '🔴 Jenkins Build | Test Subject',
+//                 attachLog: true,
+//                 to: 'shounakbhalerao777@gmail.com'
+//         }
 //         always{
 //             script {
 //                 // This requires a SonarQube webhook setup which cant be done on
@@ -105,6 +111,6 @@ pipeline {
 //                 // waitForQualityGate abortPipeline: true
 //             }
 //         }
-    }
+//     }
 }
 
