@@ -43,7 +43,7 @@ pipeline {
                 echo 'BUILD: DOCKER IMAGE'
                 script{
                     cd ${env.BASE_PATH}
-                    dockerImage = docker.build registry + ":" + ${BUILD_NUMBER}
+                    dockerImage = docker.build registry + ":noVersion"
                     echo "Docker image hello-spring:NoVersion has been built."
                 }
             }
@@ -96,7 +96,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    sh "docker rmi $registry:$BUILD_NUMBER"
+                    sh "docker rmi ${registry} :noVersion"
                 }
             }
         }
