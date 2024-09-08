@@ -17,6 +17,7 @@ pipeline {
         IMAGE_NAME = 'myapp'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
+
     }
 
     stages {
@@ -41,14 +42,6 @@ pipeline {
                     cd ${env.BASE_PATH}
                     mvn -B -DskipTests clean package
                 """.stripIndent().trim()
-
-                echo 'BUILD: DOCKER IMAGE'
-                script{
-                    dir('hello-spring') {
-                        def appImage = docker.build("${IMAGE_NAME}:${DOCKER_TAG}")
-                        echo "Docker image hello-spring:NoVersion has been built."
-                    }
-                }
             }
         }
 
@@ -82,14 +75,20 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "DEPLOY_STEP: Push Image To DockerHub"
-                script {
-                    // Push the Docker image to DockerHub
-                    docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS_ID) {
-                        appImage.push("${DOCKER_TAG}") // Push the image with build number tag
-                        appImage.push("latest") // Optionally push the image with 'latest' tag
+
+                echo 'BUILD: DOCKER IMAGE'
+                script{
+                    dir('hello-spring') {
+                        def appImage = docker.build("${IMAGE_NAME}:${DOCKER_TAG}")
+                        echo "Docker image hello-spring:NoVersion has been built."
+                        // Push the Docker image to DockerHub
+                        docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS_ID) {
+                            appImage.push("${DOCKER_TAG}") // Push the image with build number tag
+                            appImage.push("latest") // Optionally push the image with 'latest' tag
+                        }
                     }
                 }
+                echo "DEPLOY_STEP: Pushed Image To DockerHub"
             }
         }
 
