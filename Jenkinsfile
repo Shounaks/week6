@@ -34,6 +34,15 @@ pipeline {
                     cd ${env.BASE_PATH}
                     mvn -B -DskipTests clean package
                 """.stripIndent().trim()
+
+                echo 'BUILD: DOCKER IMAGE'
+                sh """
+                    cd ${env.BASE_PATH}
+
+                """.stripIndent().trim()
+                def appImage = docker.build("hello-spring:NoVersion")
+                echo "Docker image hello-spring:NoVersion has been built."
+
             }
         }
 
