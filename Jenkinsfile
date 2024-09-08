@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'BUILD: Cleaning in progress'
-                sh sh "rm -rf hello-spring/"
+                sh "rm -rf hello-spring/"
                 echo 'BUILD: Cloning Repository to local and trying to create an executable'
                 sh "git clone ${env.REPO_URL}"
                 sh "cd hello-spring/"
