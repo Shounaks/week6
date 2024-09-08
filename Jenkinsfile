@@ -75,7 +75,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy') {
             steps {
                 echo "DEPLOY_STEP: Push Image To DockerHub"
@@ -85,13 +84,11 @@ pipeline {
                 }
             }
         }
-
         stage('Release') {
             steps {
                 echo "DEPLOY_STEP: do nothing"
             }
         }
-
         stage('Cleanup') {
             steps {
                 script {
