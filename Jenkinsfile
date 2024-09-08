@@ -79,14 +79,24 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "DEPLOY_STEP: Push Image To DockerHub"
-                docker.withRegistry( '', registryCredential ) {
-                dockerImage.push()
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                }
             }
         }
 
         stage('Release') {
             steps {
                 echo "DEPLOY_STEP: do nothing"
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh "docker rmi $registry:$BUILD_NUMBER"
+                }
             }
         }
     }
