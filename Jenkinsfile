@@ -80,6 +80,12 @@ pipeline {
                 attachLog: true,
                 to: 'shounakbhalerao777@gmail.com'
         }
+        always{
+            script {
+                // Optionally, display SonarQube quality gate status after analysis
+                waitForQualityGate abortPipeline: true
+            }
+        }
     }
 }
 
