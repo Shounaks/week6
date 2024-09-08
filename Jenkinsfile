@@ -13,7 +13,7 @@ pipeline {
         OWNER = 'shounak bhalerao'
 
 //         registry = 'shalnark/hello-spring'
-        DOCKER_CREDENTIALS_ID = credentials('dockerhub-credentials') // Stored in Jenkins Credentials Manager
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // Stored in Jenkins Credentials Manager
         IMAGE_NAME = 'myapp'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_REGISTRY = 'https://index.docker.io/v1/shalnark/hello-spring'
