@@ -16,7 +16,7 @@ pipeline {
             steps {
                 echo 'BUILD: Cloning Repository to local and trying to create an executable'
                 sh "git clone ${env.REPO_URL}"
-                sh "cd ./hello-spring/"
+                sh "cd hello-spring/"
                 sh "mvn clean package"
             }
         }
