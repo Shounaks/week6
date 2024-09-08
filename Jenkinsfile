@@ -2,17 +2,22 @@ pipeline {
     agent any
 
     environment {
+        REPO_URL = 'https://github.com/Shounaks/hello-spring.git'
+        TARGET_PATH = 'target/'
         DIRECTORY_PATH = 'source/'
         TESTING_ENVIRONMENT = 'dev'
         PRODUCTION_ENVIRONMENT = 'shounak bhalerao'
+        OWNER = 'shounak bhalerao'
+
     }
 
     stages {
         stage('Build') {
             steps {
-                echo 'BUILD_STEP: Fetch the source code from the directory path specified by the environment variable'
-                echo 'BUILD_STEP: Compile the code and generate any necessary artifacts'
-                echo 'BUILD_STEP: TOOLS_USED: MAVEN, GRADLE'
+                echo 'BUILD: Cloning Repository to local and trying to create an executable'
+                sh "git clone ${env.REPO_URL}"
+                sh "cd ./hello-spring/"
+                sh "mvn clean package"
             }
         }
 
