@@ -31,7 +31,7 @@ pipeline {
         DNS_LABEL = 'myapp'
         LOCATION = 'southindia'
 
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-password')
     }
 
     stages {
