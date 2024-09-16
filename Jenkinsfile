@@ -126,7 +126,7 @@ pipeline {
                         --name ${CONTAINER_NAME} \
                         --image ${DOCKER_IMAGE} \
                         --cpu 6 \
-                        --memory 8 \
+                        --memory 6 \
                         --registry-login-server docker.io \
                         --registry-username shalnark \
                         --registry-password ${DOCKERHUB_CREDENTIALS} \
