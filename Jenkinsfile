@@ -30,6 +30,9 @@ pipeline {
         CONTAINER_NAME = 'spring-hello-world'
         DNS_LABEL = 'myapp'
         LOCATION = 'southindia'
+
+        DOCKERHUB_USERNAME = credentials('dockerhub-credentials').username
+        DOCKERHUB_PASSWORD = credentials('dockerhub-credentials').password
     }
 
     stages {
@@ -125,6 +128,8 @@ pipeline {
                         --cpu 1 \
                         --memory 1 \
                         --registry-login-server docker.io \
+                        --registry-username ${DOCKER_HUB_USERNAME} \
+                        --registry-password ${DOCKER_HUB_PASSWORD} \
                         --dns-name-label ${DNS_LABEL} \
                         --ports 80
                     az container show --resource-group ${RESOURCE_GROUP} --name ${CONTAINER_NAME} --output table
