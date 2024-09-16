@@ -89,6 +89,13 @@ pipeline {
                     }
                 }
                 echo "DEPLOY_STEP: Pushed Image To DockerHub"
+                script{
+                    sh "docker run -d -p 9090:8080 --name deploy-hello-world ${IMAGE_NAME}:${DOCKER_TAG}"
+                    input message: 'Completed with Staging?',
+                        ok: 'Yes',
+                        timeout: 300 //5 mins
+                        timeoutMessage: 'Approval timed out. Proceeding to cleanup'
+                }
             }
         }
 
@@ -100,6 +107,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
+                    sh "docker stop deploy-hello-world"
                     sh "docker rmi ${IMAGE_NAME}:${DOCKER_TAG}"
                 }
             }
