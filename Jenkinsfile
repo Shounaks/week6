@@ -19,6 +19,17 @@ pipeline {
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
 
         DEPLOY_NAME = 'deploy-hello-world'
+
+//         Release
+        AZURE_SUBSCRIPTION_ID = 'your-subscription-id'
+        AZURE_TENANT_ID = 'your-tenant-id'
+        AZURE_CLIENT_ID = 'your-client-id'
+        AZURE_CLIENT_SECRET = credentials('azure-client-secret')
+        DOCKER_IMAGE = 'shalnark/myapp:latest'
+        RESOURCE_GROUP = 'PIT-HD'
+        CONTAINER_NAME = 'spring-hello-world'
+        DNS_LABEL = 'myapp'
+        LOCATION = 'southindia'
     }
 
     stages {
@@ -76,7 +87,6 @@ pipeline {
 
         stage('Deploy') {
             steps {
-
                 echo 'BUILD: DOCKER IMAGE'
                 script{
                     dir('hello-spring') {
@@ -90,24 +100,42 @@ pipeline {
                     }
                 }
                 echo "DEPLOY_STEP: Pushed Image To DockerHub"
-                script{
-                    sh "docker run -d -p 9090:8080 --name ${DEPLOY_NAME} ${IMAGE_NAME}:${DOCKER_TAG}"
-                    input message: 'Completed with Staging?',
-                        ok: 'Yes',
-                        timeout: 300 //5 mins
-                        timeoutMessage: 'Approval timed out. Proceeding to cleanup'
-                }
+
             }
         }
 
         stage('Release') {
             steps {
-                echo "RELEASE_STEP: do nothing"
+                echo "RELEASE_STEP: Azure Login"
+                sh """az login --service-principal \
+                        --username ${AZURE_CLIENT_ID} \
+                        --password ${AZURE_CLIENT_SECRET} \
+                        --tenant ${AZURE_TENANT_ID}
+                    az group create --name ${RESOURCE_GROUP} --location ${LOCATION}
+                    az container create \
+                        --resource-group ${RESOURCE_GROUP} \
+                        --name ${CONTAINER_NAME} \
+                        --image ${DOCKER_IMAGE} \
+                        --cpu 1 \
+                        --memory 1 \
+                        --registry-login-server docker.io \
+                        --dns-name-label ${DNS_LABEL} \
+                        --ports 80
+                    az container show --resource-group ${RESOURCE_GROUP} --name ${CONTAINER_NAME} --output table
+                    echo "Deployment complete. Access your container at http://${DNS_LABEL}.${LOCATION}.azurecontainer.io"
+                """
+            }
+            script{
+                input message: 'Completed with Release?',
+                    ok: 'Yes',
+                    timeout: 300 //5 mins
+                    timeoutMessage: 'Approval timed out. Proceeding to cleanup'
             }
         }
         stage('Cleanup') {
             steps {
                 script {
+                    sh "az group delete --name $RESOURCE_GROUP --yes --no-wait"
                     sh "docker stop ${DEPLOY_NAME}"
                     sh "docker system prune -f"
                     sh "docker rmi ${IMAGE_NAME}:${DOCKER_TAG}"
