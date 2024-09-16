@@ -21,9 +21,9 @@ pipeline {
         DEPLOY_NAME = 'deploy-hello-world'
 
 //         Release
-        AZURE_SUBSCRIPTION_ID = 'your-subscription-id'
-        AZURE_TENANT_ID = 'your-tenant-id'
-        AZURE_CLIENT_ID = 'your-client-id'
+        AZURE_SUBSCRIPTION_ID = '1d4c8195-4ad3-4a8b-b2c1-ec4325e334ea'
+        AZURE_TENANT_ID = 'd02378ec-1688-46d5-8540-1c28b5f470f6'
+        AZURE_CLIENT_ID = '3288c6ce-5f83-402a-9002-2ac9529c92a3'
         AZURE_CLIENT_SECRET = credentials('azure-client-secret')
         DOCKER_IMAGE = 'shalnark/myapp:latest'
         RESOURCE_GROUP = 'PIT-HD'
@@ -100,7 +100,13 @@ pipeline {
                     }
                 }
                 echo "DEPLOY_STEP: Pushed Image To DockerHub"
-
+                script{
+                    sh "docker run -d -p 9090:8080 --name ${DEPLOY_NAME} ${IMAGE_NAME}:${DOCKER_TAG}"
+                    input message: 'Completed with Release?',
+                        ok: 'Yes',
+                        timeout: 300 //5 mins
+                        timeoutMessage: 'Approval timed out. Proceeding to cleanup'
+                }
             }
         }
 
