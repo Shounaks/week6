@@ -31,8 +31,7 @@ pipeline {
         DNS_LABEL = 'myapp'
         LOCATION = 'southindia'
 
-        DOCKERHUB_USERNAME = credentials('dockerhub-credentials').username
-        DOCKERHUB_PASSWORD = credentials('dockerhub-credentials').password
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
     }
 
     stages {
@@ -128,8 +127,8 @@ pipeline {
                         --cpu 1 \
                         --memory 1 \
                         --registry-login-server docker.io \
-                        --registry-username ${DOCKER_HUB_USERNAME} \
-                        --registry-password ${DOCKER_HUB_PASSWORD} \
+                        --registry-username ${DOCKERHUB_CREDENTIALS.username} \
+                        --registry-password ${DOCKERHUB_CREDENTIALS.password} \
                         --dns-name-label ${DNS_LABEL} \
                         --ports 80
                     az container show --resource-group ${RESOURCE_GROUP} --name ${CONTAINER_NAME} --output table
