@@ -127,8 +127,8 @@ pipeline {
                         --cpu 1 \
                         --memory 1 \
                         --registry-login-server docker.io \
-                        --registry-username ${DOCKERHUB_CREDENTIALS.username} \
-                        --registry-password ${DOCKERHUB_CREDENTIALS.password} \
+                        --registry-username shalnark \
+                        --registry-password ${DOCKERHUB_CREDENTIALS} \
                         --dns-name-label ${DNS_LABEL} \
                         --ports 80
                     az container show --resource-group ${RESOURCE_GROUP} --name ${CONTAINER_NAME} --output table
