@@ -125,7 +125,7 @@ pipeline {
                         --resource-group ${RESOURCE_GROUP} \
                         --name ${CONTAINER_NAME} \
                         --image ${DOCKER_IMAGE} \
-                        --cpu 8 \
+                        --cpu 6 \
                         --memory 8 \
                         --registry-login-server docker.io \
                         --registry-username shalnark \
