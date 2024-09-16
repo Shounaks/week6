@@ -124,12 +124,12 @@ pipeline {
                     az container show --resource-group ${RESOURCE_GROUP} --name ${CONTAINER_NAME} --output table
                     echo "Deployment complete. Access your container at http://${DNS_LABEL}.${LOCATION}.azurecontainer.io"
                 """
-            }
-            script{
-                input message: 'Completed with Release?',
-                    ok: 'Yes',
-                    timeout: 300 //5 mins
-                    timeoutMessage: 'Approval timed out. Proceeding to cleanup'
+                script{
+                    input message: 'Completed with Release?',
+                        ok: 'Yes',
+                        timeout: 300 //5 mins
+                        timeoutMessage: 'Approval timed out. Proceeding to cleanup'
+                }
             }
         }
         stage('Cleanup') {
