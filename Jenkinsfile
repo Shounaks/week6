@@ -119,13 +119,14 @@ pipeline {
                         --username ${AZURE_CLIENT_ID} \
                         --password ${AZURE_CLIENT_SECRET} \
                         --tenant ${AZURE_TENANT_ID}
+                    az account set -s ${AZURE_SUBSCRIPTION_ID}
                     az group create --name ${RESOURCE_GROUP} --location ${LOCATION}
                     az container create \
                         --resource-group ${RESOURCE_GROUP} \
                         --name ${CONTAINER_NAME} \
                         --image ${DOCKER_IMAGE} \
-                        --cpu 1 \
-                        --memory 1 \
+                        --cpu 8 \
+                        --memory 8Gb \
                         --registry-login-server docker.io \
                         --registry-username shalnark \
                         --registry-password ${DOCKERHUB_CREDENTIALS} \
