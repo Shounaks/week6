@@ -36,7 +36,7 @@ pipeline {
         REGION = 'asia-south1' // e.g., us-central1
         SERVICE_NAME = 'pid-hd'
         IMAGE = 'shalnark/myapp:latest'
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account-key')
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-secret')
     }
 
     stages {
