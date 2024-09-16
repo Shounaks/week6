@@ -109,7 +109,7 @@ pipeline {
             steps {
                 script {
                     sh "docker stop ${DEPLOY_NAME}"
-                    sh "docker prune ${DEPLOY_NAME}"
+                    sh "docker system prune -f"
                     sh "docker rmi ${IMAGE_NAME}:${DOCKER_TAG}"
                 }
             }
