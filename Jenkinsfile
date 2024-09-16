@@ -118,6 +118,7 @@ pipeline {
         }
 
         stage('Release') {
+           steps{
                 script {
                     echo "Deploying to Cloud Run..."
                     sh """
@@ -130,6 +131,7 @@ pipeline {
                           --allow-unauthenticated
                     """
                 }
+           }
 //             steps {
 //                 echo "RELEASE_STEP: Azure Login"
 //                 sh """az login --service-principal \
