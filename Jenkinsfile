@@ -120,7 +120,7 @@ pipeline {
         stage('Release') {
                 script {
                     echo "Deploying to Cloud Run..."
-                    sh '''
+                    sh """
                         gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
                         gcloud config set project ${PROJECT_ID}
                         gcloud run deploy ${SERVICE_NAME} \
@@ -128,7 +128,7 @@ pipeline {
                           --platform managed \
                           --region ${REGION} \
                           --allow-unauthenticated
-                    '''
+                    """
                 }
 //             steps {
 //                 echo "RELEASE_STEP: Azure Login"
