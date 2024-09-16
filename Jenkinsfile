@@ -18,6 +18,7 @@ pipeline {
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
 
+        DEPLOY_NAME = 'deploy-hello-world'
     }
 
     stages {
@@ -90,7 +91,7 @@ pipeline {
                 }
                 echo "DEPLOY_STEP: Pushed Image To DockerHub"
                 script{
-                    sh "docker run -d -p 9090:8080 --name deploy-hello-world ${IMAGE_NAME}:${DOCKER_TAG}"
+                    sh "docker run -d -p 9090:8080 --name ${DEPLOY_NAME} ${IMAGE_NAME}:${DOCKER_TAG}"
                     input message: 'Completed with Staging?',
                         ok: 'Yes',
                         timeout: 300 //5 mins
@@ -107,7 +108,8 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    sh "docker stop deploy-hello-world"
+                    sh "docker stop ${DEPLOY_NAME}"
+                    sh "docker prune ${DEPLOY_NAME}"
                     sh "docker rmi ${IMAGE_NAME}:${DOCKER_TAG}"
                 }
             }
