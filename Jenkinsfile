@@ -12,32 +12,13 @@ pipeline {
         PRODUCTION_ENVIRONMENT = 'shounak bhalerao'
         OWNER = 'shounak bhalerao'
 
-//         registry = 'shalnark/hello-spring'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // Stored in Jenkins Credentials Manager
+
         IMAGE_NAME = 'shalnark/myapp'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
-
         DEPLOY_NAME = 'deploy-hello-world'
-        // RELEASE AZURE 2
         SSH_CREDENTIALS_ID = 'azure-vm'
-        // Release AZURE
-//         AZURE_SUBSCRIPTION_ID = '1d4c8195-4ad3-4a8b-b2c1-ec4325e334ea'
-//         AZURE_TENANT_ID = 'd02378ec-1688-46d5-8540-1c28b5f470f6'
-//         AZURE_CLIENT_ID = '3288c6ce-5f83-402a-9002-2ac9529c92a3'
-//         AZURE_CLIENT_SECRET = credentials('azure-client-secret')
-//         DOCKER_IMAGE = 'shalnark/myapp:latest'
-//         RESOURCE_GROUP = 'PIT-HD'
-//         CONTAINER_NAME = 'spring-hello-world'
-//         DNS_LABEL = 'myapp'
-//         LOCATION = 'southindia'
-//         DOCKERHUB_CREDENTIALS = credentials('dockerhub-password')
-        // Release GCP
-//         PROJECT_ID = 'pit-hd-435814'
-//         REGION = 'asia-south1' // e.g., us-central1
-//         SERVICE_NAME = 'pid-hd'
-//         IMAGE = 'shalnark/myapp:latest'
-//         GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-secret')
     }
 
     stages {
@@ -134,7 +115,6 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-//                     sh "az group delete --name $RESOURCE_GROUP --yes --no-wait"
                     sh "docker stop ${DEPLOY_NAME}"
                     sh "docker system prune -f"
                     sh "docker rmi ${IMAGE_NAME}:${DOCKER_TAG}"
@@ -142,27 +122,4 @@ pipeline {
             }
         }
     }
-//     post{
-//         success {
-//             emailext body: '[SUCCESS] Jenkins Week 6 Activity : Build Success',
-//                 subject: '🟢 Jenkins Build | Test Subject',
-//                 attachLog: true,
-//                 to: 'shounakbhalerao777@gmail.com'
-//         }
-//         failure {
-//             emailext body: '[FAILURE] Jenkins Week 6 Activity : Build Success',
-//                 subject: '🔴 Jenkins Build | Test Subject',
-//                 attachLog: true,
-//                 to: 'shounakbhalerao777@gmail.com'
-//         }
-//         always{
-//             script {
-//                 // This requires a SonarQube webhook setup which cant be done on
-//                 // the same server as jenkins so skipping this part as for now.
-//                 // It doesnt affect our functionality
-//                 // Optionally, display SonarQube quality gate status after analysis
-//                 // waitForQualityGate abortPipeline: true
-//             }
-//         }
-//     }
 }
