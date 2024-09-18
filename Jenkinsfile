@@ -19,8 +19,10 @@ pipeline {
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
 
         DEPLOY_NAME = 'deploy-hello-world'
-
-//         Release
+        // RELEASE AZURE 2
+        SSH_CREDENTIALS_ID = 'azure-vm'
+        AZURE_VM_IP = ''
+        // Release AZURE
 //         AZURE_SUBSCRIPTION_ID = '1d4c8195-4ad3-4a8b-b2c1-ec4325e334ea'
 //         AZURE_TENANT_ID = 'd02378ec-1688-46d5-8540-1c28b5f470f6'
 //         AZURE_CLIENT_ID = '3288c6ce-5f83-402a-9002-2ac9529c92a3'
@@ -31,12 +33,12 @@ pipeline {
 //         DNS_LABEL = 'myapp'
 //         LOCATION = 'southindia'
 //         DOCKERHUB_CREDENTIALS = credentials('dockerhub-password')
-
-        PROJECT_ID = 'pit-hd-435814'
-        REGION = 'asia-south1' // e.g., us-central1
-        SERVICE_NAME = 'pid-hd'
-        IMAGE = 'shalnark/myapp:latest'
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-secret')
+        // Release GCP
+//         PROJECT_ID = 'pit-hd-435814'
+//         REGION = 'asia-south1' // e.g., us-central1
+//         SERVICE_NAME = 'pid-hd'
+//         IMAGE = 'shalnark/myapp:latest'
+//         GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-secret')
     }
 
     stages {
@@ -118,49 +120,17 @@ pipeline {
         }
 
         stage('Release') {
-           steps{
+            steps {
                 script {
-                    echo "Deploying to Cloud Run..."
-                    sh """
-                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
-                        gcloud config set project ${PROJECT_ID}
-                        gcloud run deploy ${SERVICE_NAME} \
-                          --image ${IMAGE} \
-                          --platform managed \
-                          --region ${REGION} \
-                          --allow-unauthenticated
-                    """
+                    env.AZURE_VM_IP = input message: 'Enter the IP address of the Azure VM:',
+                        parameters: [string(defaultValue: 'your-vm-ip', description: 'Azure VM IP', name: 'IP_ADDRESS')]
+                    sshagent (credentials: [SSH_CREDENTIALS_ID]) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no azureuser@${AZURE_VM_IP} 'docker pull ${IMAGE_NAME}:latest && docker stop ${DEPLOY_NAME} || true && docker rm ${DEPLOY_NAME} || true && docker run -d --name ${DEPLOY_NAME} -p 8080:8080 ${IMAGE_NAME}:latest'
+                        """
+                    }
                 }
-           }
-//             steps {
-//                 echo "RELEASE_STEP: Azure Login"
-//                 sh """az login --service-principal \
-//                         --username ${AZURE_CLIENT_ID} \
-//                         --password ${AZURE_CLIENT_SECRET} \
-//                         --tenant ${AZURE_TENANT_ID}
-//                     az account set -s ${AZURE_SUBSCRIPTION_ID}
-//                     az group create --name ${RESOURCE_GROUP} --location ${LOCATION}
-//                     az container create \
-//                         --resource-group ${RESOURCE_GROUP} \
-//                         --name ${CONTAINER_NAME} \
-//                         --image ${DOCKER_IMAGE} \
-//                         --cpu 6 \
-//                         --memory 6 \
-//                         --registry-login-server docker.io \
-//                         --registry-username shalnark \
-//                         --registry-password ${DOCKERHUB_CREDENTIALS} \
-//                         --dns-name-label ${DNS_LABEL} \
-//                         --ports 80
-//                     az container show --resource-group ${RESOURCE_GROUP} --name ${CONTAINER_NAME} --output table
-//                     echo "Deployment complete. Access your container at http://${DNS_LABEL}.${LOCATION}.azurecontainer.io"
-//                 """
-//                 script{
-//                     input message: 'Completed with Release?',
-//                         ok: 'Yes',
-//                         timeout: 300 //5 mins
-//                         timeoutMessage: 'Approval timed out. Proceeding to cleanup'
-//                 }
-//             }
+            }
         }
         stage('Cleanup') {
             steps {
