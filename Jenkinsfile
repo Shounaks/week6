@@ -125,6 +125,7 @@ pipeline {
                         parameters: [string(defaultValue: '0.0.0.0', description: 'Azure VM IP', name: 'IP_ADDRESS')]
                     sshagent (credentials: [SSH_CREDENTIALS_ID]) {
                         sh """
+                        ssh sudo chmod 666 /var/run/docker.sock
                         ssh -o StrictHostKeyChecking=no azureuser@${AZURE_VM_IP} 'docker pull ${IMAGE_NAME}:latest && docker stop ${DEPLOY_NAME} || true && docker rm ${DEPLOY_NAME} || true && docker run -d --name ${DEPLOY_NAME} -p 8080:8080 ${IMAGE_NAME}:latest'
                         """
                     }
