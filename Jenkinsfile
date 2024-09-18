@@ -21,7 +21,6 @@ pipeline {
         DEPLOY_NAME = 'deploy-hello-world'
         // RELEASE AZURE 2
         SSH_CREDENTIALS_ID = 'azure-vm'
-        AZURE_VM_IP = ''
         // Release AZURE
 //         AZURE_SUBSCRIPTION_ID = '1d4c8195-4ad3-4a8b-b2c1-ec4325e334ea'
 //         AZURE_TENANT_ID = 'd02378ec-1688-46d5-8540-1c28b5f470f6'
@@ -122,8 +121,8 @@ pipeline {
         stage('Release') {
             steps {
                 script {
-                    env.AZURE_VM_IP = input message: 'Enter the IP address of the Azure VM:',
-                        parameters: [string(defaultValue: 'your-vm-ip', description: 'Azure VM IP', name: 'IP_ADDRESS')]
+                    def AZURE_VM_IP = input message: 'Enter the IP address of the Azure VM:',
+                        parameters: [string(defaultValue: '0.0.0.0', description: 'Azure VM IP', name: 'IP_ADDRESS')]
                     sshagent (credentials: [SSH_CREDENTIALS_ID]) {
                         sh """
                         ssh -o StrictHostKeyChecking=no azureuser@${AZURE_VM_IP} 'docker pull ${IMAGE_NAME}:latest && docker stop ${DEPLOY_NAME} || true && docker rm ${DEPLOY_NAME} || true && docker run -d --name ${DEPLOY_NAME} -p 8080:8080 ${IMAGE_NAME}:latest'
